@@ -1,0 +1,28 @@
+<?php
+// templates/task_list.php
+// Ce fichier est destiné à être inclus après avoir récupéré $tasks
+if (empty($tasks)) {
+    echo '<p>Vous n\'avez pas encore de tâches. <a href="/add_task.php">Ajoutez-en une !</a></p>';
+} else {
+    echo '<div class="task-list"><h2>Vos tâches</h2><ul>';
+    foreach ($tasks as $task) {
+        echo '<li class="' . ($task['completed'] ? 'completed' : '') . '">';
+        echo '<span>' . htmlspecialchars($task['title']) . '</span>';
+        echo '<div class="task-actions">';
+        echo '<a href="/task_details.php?id=' . $task['id'] . '">Voir</a>';
+        if (!$task['completed']) {
+            echo '<form action="/complete_task.php" method="POST" style="display:inline;">';
+            echo '<input type="hidden" name="task_id" value="' . $task['id'] . '">';
+            echo '<button type="submit" class="complete-btn">Terminer</button>';
+            echo '</form>';
+        }
+        echo '<form action="/delete_task.php" method="POST" style="display:inline;">';
+        echo '<input type="hidden" name="task_id" value="' . $task['id'] . '">';
+        echo '<button type="submit" class="delete-btn">Supprimer</button>';
+        echo '</form>';
+        echo '</div>';
+        echo '</li>';
+    }
+    echo '</ul></div>';
+}
+?>

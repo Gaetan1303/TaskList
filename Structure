@@ -1,0 +1,19 @@
+/TaskList
+    /assets
+        /css
+        /js
+    /includes
+        db.php
+        auth.php
+    /templates
+        header.php
+        footer.php
+        login.php
+        register.php
+        tasks.php
+        task_detail.php
+    index.php
+    logout.php
+    add_task.php
+    delete_task.php
+    mark_complete.php
