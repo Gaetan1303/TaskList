@@ -1,14 +1,14 @@
 <?php
 // public/logout.php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 
-// Détruire toutes les variables de session
+// Démarre la session PHP
+session_start();
+
+// Vide toutes les variables de session
 $_SESSION = array();
 
-// Si vous voulez détruire complètement la session, effacez également le cookie de session.
-// Note : cela détruira la session, et pas seulement les données de session !
+// Si la session est gérée par des cookies, supprime aussi le cookie de session.
+// Note: Cela détruira le cookie de session et pas seulement les données de session !
 if (ini_get("session.use_cookies")) {
     $params = session_get_cookie_params();
     setcookie(session_name(), '', time() - 42000,
@@ -17,12 +17,9 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
-// Finalement, détruire la session.
+// Détruit la session
 session_destroy();
 
-$_SESSION['message'] = 'Vous avez été déconnecté avec succès.';
-$_SESSION['message_type'] = 'success';
-
-header('Location: /login.php');
-exit();
-?>
+// Redirige l'utilisateur vers la page de connexion avec un message de succès
+header('Location: /login.php?message=' . urlencode("Vous avez été déconnecté.") . '&type=success');
+exit(); // Termine l'exécution du script

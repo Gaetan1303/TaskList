@@ -1,66 +1,61 @@
 <?php
 // public/login.php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+
+// Démarre la session PHP
+session_start();
+
+// Inclut le modèle utilisateur pour les fonctions CRUD
+require_once __DIR__ . '/../src/models/User.php';
+
+$message = ''; // Variable pour stocker les messages à afficher à l'utilisateur
+$messageType = ''; // Variable pour le type de message (success/error)
+
+// Vérifie si un message a été passé via l'URL (ex: après inscription réussie)
+if (isset($_GET['message'])) {
+    $message = htmlspecialchars($_GET['message']);
+    $messageType = htmlspecialchars($_GET['type'] ?? '');
 }
 
-require_once __DIR__ . '/../config/database.php';
-
-// Si l'utilisateur est déjà connecté, rediriger vers l'accueil
+// Vérifie si l'utilisateur est déjà connecté, si oui, redirige vers l'accueil
 if (isset($_SESSION['user_id'])) {
-    header('Location: /index.php');
+    header('Location: /');
     exit();
 }
 
+// Vérifie si le formulaire a été soumis (méthode POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = $_POST['password'] ?? '';
+    // Vérifie si les champs 'username' et 'password' sont définis et non vides
+    if (isset($_POST['username']) && !empty($_POST['username']) &&
+        isset($_POST['password']) && !empty($_POST['password'])) {
 
-    if (empty($username) || empty($password)) {
-        $_SESSION['message'] = 'Le nom d\'utilisateur et le mot de passe sont requis.';
-        $_SESSION['message_type'] = 'error';
-    } else {
-        try {
-            $stmt = $pdo->prepare("SELECT id, password FROM users WHERE username = ?");
-            $stmt->execute([$username]);
-            $user = $stmt->fetch();
+        $username = trim($_POST['username']); // Récupère et nettoie le nom d'utilisateur
+        $password = $_POST['password'];       // Récupère le mot de passe
 
-            if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $username;
-                $_SESSION['message'] = 'Connexion réussie !';
-                $_SESSION['message_type'] = 'success';
-                header('Location: /index.php');
-                exit();
-            } else {
-                $_SESSION['message'] = 'Nom d\'utilisateur ou mot de passe incorrect.';
-                $_SESSION['message_type'] = 'error';
-            }
-        } catch (PDOException $e) {
-            $_SESSION['message'] = "Erreur lors de la connexion : " . $e->getMessage();
-            $_SESSION['message_type'] = 'error';
+        // Récupère l'utilisateur par son nom d'utilisateur
+        $user = getUserByUsername($username);
+
+        // Vérifie si un utilisateur a été trouvé et si le mot de passe correspond
+        if ($user && verifyPassword($password, $user['password'])) {
+            // Authentification réussie : stocke l'ID de l'utilisateur dans la session
+            $_SESSION['user_id'] = $user['id'];
+            // Redirige vers la page d'accueil
+            header('Location: /');
+            exit(); // Termine l'exécution du script
+        } else {
+            // Identifiants invalides
+            $message = "Nom d'utilisateur ou mot de passe incorrect.";
+            $messageType = 'error';
         }
+    } else {
+        $message = "Veuillez remplir tous les champs.";
+        $messageType = 'error';
     }
-    header('Location: /login.php'); // Redirige pour afficher le message
-    exit();
 }
 
-include __DIR__ . '/../templates/header.php';
-?>
+// Définit le titre de la page
+$title = "Connexion - TaskList";
+// Définit le chemin de la vue à inclure dans le layout
+$content = __DIR__ . '/../src/views/login.php';
 
-<h2>Connexion</h2>
-<form action="/login.php" method="POST">
-    <label for="username">Nom d'utilisateur :</label>
-    <input type="text" id="username" name="username" required>
-
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" name="password" required>
-
-    <button type="submit">Se connecter</button>
-</form>
-
-<p>Pas encore de compte ? <a href="/register.php">Inscrivez-vous ici</a></p>
-
-<?php
-include __DIR__ . '/../templates/footer.php';
-?>
+// Inclut le layout principal qui affichera le contenu de la vue
+require_once __DIR__ . '/../src/views/layout.php';

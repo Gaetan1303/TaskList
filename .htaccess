@@ -3,16 +3,28 @@
 # Active le moteur de réécriture d'URL
 RewriteEngine On
 
-# Définir la base de réécriture 
-RewriteBase /tasklist/
+# Définit le répertoire de base pour la réécriture
+# Si votre application est dans un sous-dossier, par exemple http://localhost/tasklist/,
+# vous devrez changer la ligne ci-dessous en : RewriteBase /tasklist/
+RewriteBase /
 
-# Redirige toutes les requêtes vers public/
-RewriteRule ^$ public/index.php [L]
-RewriteRule ^index\.php$ public/index.php [L]
-RewriteRule ^login\.php$ public/login.php [L]
-RewriteRule ^register\.php$ public/register.php [L]
-
-# Redirige vers public/ si le fichier ou répertoire n'existe pas
+# Règle pour exclure les fichiers et répertoires existants
+# Si la requête correspond à un fichier réel sur le disque, ne fait rien
 RewriteCond %{REQUEST_FILENAME} !-f
+# Si la requête correspond à un répertoire réel sur le disque, ne fait rien
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.+)$ public/$1 [L]
+
+# Règle principale de réécriture
+# Réécrit toutes les requêtes non-existantes vers index.php
+# Le [L] signifie "Last rule" (dernière règle), arrête le traitement des règles suivantes
+# Le [QSA] signifie "Query String Append", ajoute les paramètres de la chaîne de requête existants
+RewriteRule ^(.*)$ public/index.php [L,QSA]
+
+# Règle spécifique pour les fichiers PHP dans public/
+# Si un fichier PHP est directement demandé dans public/, le servir
+# Ceci est utile pour les points d'entrée comme public/login.php, public/register.php, public/logout.php
+RewriteRule ^(login|register|logout|task_details)\.php$ public/$1.php [L,QSA]
+
+# Règle pour les fichiers CSS ou autres assets statiques dans public/
+# Permet d'accéder directement aux fichiers statiques comme public/css/style.css
+RewriteRule ^(css|js|images)/(.*)$ public/$1/$2 [L,QSA]

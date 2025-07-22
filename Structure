@@ -1,19 +1,27 @@
-/TaskList
-    /assets
-        /css
-        /js
-    /includes
-        db.php
-        auth.php
-    /templates
-        header.php
-        footer.php
-        login.php
-        register.php
-        tasks.php
-        task_detail.php
-    index.php
-    logout.php
-    add_task.php
-    delete_task.php
-    mark_complete.php
+TaskList/
+├── public/
+│ ├── index.php             (Point d'entrée principal pour la page d'accueil et la gestion des tâches)
+│ ├── login.php             (Page de connexion)
+│ ├── register.php          (Page d'inscription)
+│ ├── logout.php            (Page de déconnexion)
+│ └── css/
+│     └── style.css         (Feuille de style pour l'application)
+├── src/
+│ ├── config/
+│ │ └── db.php              (Configuration de la connexion à la base de données)
+│ ├── models/
+│ │ ├── User.php            (Classe ou fonctions CRUD pour la table 'users')
+│ │ └── Task.php            (Classe ou fonctions CRUD pour la table 'tasks')
+│ ├── controllers/
+│ │ ├── AuthController.php  (Logique d'authentification : inscription, connexion, déconnexion)
+│ │ └── TaskController.php  (Logique de gestion des tâches : ajout, suppression, affichage)
+│ └── views/
+│     ├── layout.php        (Modèle de mise en page commun à toutes les pages)
+│     ├── home.php          (Vue pour la page d'accueil affichant les tâches)
+│     ├── login.php         (Vue pour le formulaire de connexion)
+│     ├── register.php      (Vue pour le formulaire d'inscription)
+│     ├── task_details.php  (Vue pour les détails d'une tâche - BONUS)
+│     └── includes/
+│         └── header.php    (En-tête HTML commun)
+│         └── footer.php    (Pied de page HTML commun)
+└── .htaccess               (Pour la réécriture d'URL si vous voulez des URLs propres, facultatif pour ce projet simple)
