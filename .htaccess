@@ -1,0 +1,18 @@
+# .htaccess
+
+# Active le moteur de réécriture d'URL
+RewriteEngine On
+
+# Définir la base de réécriture 
+RewriteBase /tasklist/
+
+# Redirige toutes les requêtes vers public/
+RewriteRule ^$ public/index.php [L]
+RewriteRule ^index\.php$ public/index.php [L]
+RewriteRule ^login\.php$ public/login.php [L]
+RewriteRule ^register\.php$ public/register.php [L]
+
+# Redirige vers public/ si le fichier ou répertoire n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ public/$1 [L]
