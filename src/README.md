@@ -49,7 +49,8 @@ Configuration de la Base de Données
     Exécutez les requêtes SQL suivantes pour créer les tables users et tasks :
 
     -- Table pour les utilisateurs
-    CREATE TABLE IF NOT EXISTS users (
+    CREATE
+     TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
         username VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL
@@ -138,6 +139,7 @@ TaskList/
 │         ├── header.php    # En-tête commun (navigation)
 │         └── footer.php    # Pied de page commun
 └── .htaccess               # Fichier de configuration Apache pour la réécriture d'URL
+
 
 
 7. Technologies Utilisées

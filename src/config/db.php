@@ -2,10 +2,10 @@
 // src/config/db.php
 
 function getDbConnection() {
-    $host = 'localhost';
-    $db   = 'tasklist_db'; // Remplacez par le nom de votre base de données
-    $user = 'root';        // Remplacez par votre utilisateur de base de données
-    $pass = '';            // Remplacez par votre mot de passe de base de données
+    $host = '127.0.0.1';
+    $db   = 'tasklist_db'; 
+    $user = 'root';       
+    $pass = 'root';           
     $charset = 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
